@@ -1,7 +1,7 @@
 import { SvgCanvasContainer } from './components/SvgCanvas/SvgCanvasContainer'
-import React, { FC, useRef, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { allProjects } from '../../models/project'
-import { Box, Paper, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import { Sidebar } from 'shared/Sidebar/Sidebar'
 
 /**

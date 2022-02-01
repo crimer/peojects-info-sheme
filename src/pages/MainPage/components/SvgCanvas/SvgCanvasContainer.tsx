@@ -1,46 +1,32 @@
 import { Project } from '../../../../models/project'
-import React, { useRef, useEffect, FC } from 'react'
-import {
-    fitSelection,
-    zoomOnViewerCenter,
-    fitToViewer,
-    Value,
-} from 'react-svg-pan-zoom'
-import { useState } from 'react'
+import React, { FC, useRef } from 'react'
 import { SvgCanvas } from './SvgCanvas'
 import { Button, Paper } from '@mui/material'
+import { useZoom } from 'hooks/useZoom'
 
 interface IProps {
     projects: Project[]
 }
 
 export const SvgCanvasContainer: FC<IProps> = ({ projects }) => {
-    const canvasWrapperRef = useRef<HTMLDivElement | null>(null)
-    const [value, setValue] = useState<Value>({} as Value)
-
-    const zoomOnViewerCenter2 = () => setValue(zoomOnViewerCenter(value, 1.1))
-    const fitSelection2 = () => setValue(fitSelection(value, 40, 40, 200, 200))
-    const fitToViewer2 = () => setValue(fitToViewer(value))
-    const sevSvgValue = (newSvgValue: Value) => setValue(newSvgValue)
+    const svgCanvas = useRef(null)
+    const { resetZoom, zoomValue } = useZoom(svgCanvas)
 
     return (
         <>
-            <Button onClick={() => zoomOnViewerCenter2()} variant="contained">
-                Zoom on center (mode 2)
-            </Button>
-            <Button onClick={() => fitSelection2()} variant="contained">
-                Zoom area 200x200 (mode 2)
-            </Button>
-            <Button onClick={() => fitToViewer2()} variant="contained">
-                Fit (mode 2)
-            </Button>
-            <Paper ref={canvasWrapperRef}>
-                <SvgCanvas
-					svgValue={value}
-					sevSvgValue={sevSvgValue}
-                    canvasWrapperRef={canvasWrapperRef}
-                    projects={projects}
-                />
+            <Paper
+                style={{
+                    padding: '1em',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}>
+                <div style={{ marginBottom: '1em' }}>
+                    <Button onClick={resetZoom} variant="contained">
+                        Сброс
+                    </Button>
+                </div>
+                <SvgCanvas projects={projects} svgCanvas={svgCanvas} zoomValue={zoomValue} />
             </Paper>
         </>
     )

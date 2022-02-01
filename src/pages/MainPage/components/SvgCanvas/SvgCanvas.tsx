@@ -1,62 +1,25 @@
 import { Position } from '../../../../models/position'
 import { Project } from '../../../../models/project'
-import React, { useRef, useEffect, FC, useMemo } from 'react'
-import { ReactSVGPanZoom, fitToViewer, Value } from 'react-svg-pan-zoom'
-import { useState } from 'react'
+import React, { FC, useMemo } from 'react'
 
 interface ISvgCanvas {
     projects: Project[]
-    canvasWrapperRef: React.MutableRefObject<HTMLDivElement | null>
-	svgValue: Value
-	sevSvgValue: (newSvgValue: Value) => void
+    svgCanvas: React.MutableRefObject<null>
+    zoomValue: number
 }
 
-type CanvasSize = {
-    width: number
-    height: number
-}
-
-export const SvgCanvas: FC<ISvgCanvas> = ({ projects, canvasWrapperRef, svgValue, sevSvgValue }) => {
-    const Viewer = useRef(null)
-    
-    const [canvasSize, setCanvasSize] = useState<CanvasSize>({
-        height: 0,
-        width: 0,
-    })
-
-    useEffect(() => {
-		if (!canvasWrapperRef || !canvasWrapperRef.current || !Viewer.current) 
-			return
-		
-		fitToViewer(Viewer.current)
-
-        const canvasWrapperBounds = canvasWrapperRef.current.getBoundingClientRect()
-
-		if(canvasWrapperRef.current.parentElement === null)
-			return
-
-        setCanvasSize({
-            width: canvasWrapperBounds.width - 20,
-            height: +canvasWrapperRef.current.parentElement.offsetHeight ?? 0,
-        })
-    }, [setCanvasSize, canvasWrapperRef])
-
+export const SvgCanvas: FC<ISvgCanvas> = ({
+    projects,
+    svgCanvas,
+    zoomValue,
+}) => {
     return (
-        <ReactSVGPanZoom
-            ref={Viewer}
-            tool={'pan'}
-            value={svgValue}
-            width={canvasSize.width ?? 500}
-            height={canvasSize.height ?? 500}
-			background={'white'}
-			detectWheel={true}
-			scaleFactor={20}
-            onChangeTool={() => null}
-			customToolbar={() => null}
-			customMiniature={() => null}
-			detectPinchGesture={false}
-            onChangeValue={sevSvgValue}>
-            <svg className="svgCanvas" preserveAspectRatio="xMidYMid meet">
+        <svg
+            className="svgCanvas"
+            width="100%"
+            preserveAspectRatio="xMidYMid meet"
+            ref={svgCanvas}>
+            <g style={{ transform: `scale(${zoomValue})` }}>
                 {projects.map((p, i) => {
                     return (
                         <ProjectCircle
@@ -68,8 +31,8 @@ export const SvgCanvas: FC<ISvgCanvas> = ({ projects, canvasWrapperRef, svgValue
                         />
                     )
                 })}
-            </svg>
-        </ReactSVGPanZoom>
+            </g>
+        </svg>
     )
 }
 
@@ -90,7 +53,11 @@ export const ProjectCircle: FC<ICircle> = (params) => {
     }, [params])
 
     return (
-        <g stroke="green" fill="white" strokeWidth="5">
+        <g
+            onClick={() => console.log('1')}
+            stroke="green"
+            fill="white"
+            strokeWidth="5">
             <circle cx={params.x} cy={params.y} r={params.size} />
             <text x={textPos.x} y={textPos.y} fontSize="32">
                 {params.text}
