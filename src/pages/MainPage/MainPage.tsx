@@ -1,6 +1,6 @@
-import { SvgCanvasContainer } from '..//shared/SvgCanvas/SvgCanvasContainer'
+import { SvgCanvasContainer } from './components/SvgCanvas/SvgCanvasContainer'
 import React, { FC, useRef, useState } from 'react'
-import { allProjects } from '..//models/project'
+import { allProjects } from '../../models/project'
 import { Box, Paper, Typography } from '@mui/material'
 import { Sidebar } from 'shared/Sidebar/Sidebar'
 
@@ -26,19 +26,8 @@ export const MainPage: FC<IProps> = () => {
 
     return (
         <>
-            <Box
-                display={'flex'}
-                flexDirection={'column'}
-                style={{
-                    width: '100%',
-                    height: '100vh',
-                }}>
-                <Typography component="h4" variant="h4">
-                    Dns проекты
-                </Typography>
-                <Box component="main" flexGrow={1} overflow={'auto'}>
-                    <SvgCanvasContainer projects={projects} />
-                </Box>
+            <Box style={{ height: '100%' }}>
+                <SvgCanvasContainer projects={projects} />
             </Box>
 
             {isSidebar && (

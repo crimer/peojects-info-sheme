@@ -1,4 +1,4 @@
-import { Project } from '../../models/project'
+import { Project } from '../../../../models/project'
 import React, { useRef, useEffect, FC } from 'react'
 import {
     fitSelection,
@@ -7,7 +7,7 @@ import {
     Value,
 } from 'react-svg-pan-zoom'
 import { useState } from 'react'
-import { SvgCanvasPresenter } from './SvgCanvasPresenter'
+import { SvgCanvas } from './SvgCanvas'
 import { Button, Paper } from '@mui/material'
 
 interface IProps {
@@ -15,18 +15,13 @@ interface IProps {
 }
 
 export const SvgCanvasContainer: FC<IProps> = ({ projects }) => {
-    const Viewer = useRef(null)
-	const canvasWrapperRef = useRef<HTMLDivElement | null>(null)
-
+    const canvasWrapperRef = useRef<HTMLDivElement | null>(null)
     const [value, setValue] = useState<Value>({} as Value)
-
-    useEffect(() => {
-        Viewer.current && fitToViewer(Viewer.current)
-    }, [])
 
     const zoomOnViewerCenter2 = () => setValue(zoomOnViewerCenter(value, 1.1))
     const fitSelection2 = () => setValue(fitSelection(value, 40, 40, 200, 200))
     const fitToViewer2 = () => setValue(fitToViewer(value))
+    const sevSvgValue = (newSvgValue: Value) => setValue(newSvgValue)
 
     return (
         <>
@@ -39,14 +34,13 @@ export const SvgCanvasContainer: FC<IProps> = ({ projects }) => {
             <Button onClick={() => fitToViewer2()} variant="contained">
                 Fit (mode 2)
             </Button>
-            <Paper
-                ref={canvasWrapperRef}
-                style={{
-                    padding: '1em',
-                    width: '100%',
-                    height: '100%',
-                }}>
-                <SvgCanvasPresenter canvasWrapperRef={canvasWrapperRef} projects={projects} />
+            <Paper ref={canvasWrapperRef}>
+                <SvgCanvas
+					svgValue={value}
+					sevSvgValue={sevSvgValue}
+                    canvasWrapperRef={canvasWrapperRef}
+                    projects={projects}
+                />
             </Paper>
         </>
     )

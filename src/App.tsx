@@ -1,13 +1,15 @@
 import { CssBaseline } from '@mui/material'
+import { PageContainer } from 'pages/PageContainer'
 import React, { FC } from 'react'
-import './App.css'
-import { MainPage } from './pages/MainPage'
+import { MainPage } from './pages/MainPage/MainPage'
 
 export const App: FC = () => {
     return (
         <>
-            <MainPage />
-            <CssBaseline />
+            <PageContainer>
+                <MainPage />
+                <CssBaseline />
+            </PageContainer>
         </>
     )
 }

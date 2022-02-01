@@ -1,4 +1,4 @@
-import { Drawer, List, Divider } from '@mui/material'
+import { Drawer } from '@mui/material'
 import React, { FC } from 'react'
 
 interface IProps {
