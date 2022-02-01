@@ -15,6 +15,7 @@ export const SvgCanvas: FC<ISvgCanvas> = ({
 }) => {
     return (
         <svg
+			xmlns="http://www.w3.org/2000/svg"
             className="svgCanvas"
             width="100%"
             preserveAspectRatio="xMidYMid meet"
