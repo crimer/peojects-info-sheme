@@ -9,12 +9,14 @@ interface IProps {
 }
 
 export const SvgCanvasContainer: FC<IProps> = ({ projects }) => {
-    const svgCanvas = useRef(null)
-    const { resetZoom, zoomValue } = useSvgViewBox(svgCanvas)
+    const svgCanvasRef = useRef(null)
+    const wrapperRef = useRef(null)
+    const { reset, viewBoxString } = useSvgViewBox(svgCanvasRef)
 
     return (
         <>
             <Paper
+				ref={wrapperRef}
                 style={{
                     padding: '1em',
                     height: '100%',
@@ -22,11 +24,11 @@ export const SvgCanvasContainer: FC<IProps> = ({ projects }) => {
                     flexDirection: 'column',
                 }}>
                 <div style={{ marginBottom: '1em' }}>
-                    <Button onClick={resetZoom} variant="contained">
+                    <Button onClick={reset} variant="contained">
                         Сброс
                     </Button>
                 </div>
-                <SvgCanvas projects={projects} svgCanvas={svgCanvas} zoomValue={zoomValue} />
+                <SvgCanvas projects={projects} viewBoxString={viewBoxString} svgCanvasRef={svgCanvasRef} />
             </Paper>
         </>
     )

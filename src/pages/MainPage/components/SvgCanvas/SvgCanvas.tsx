@@ -4,24 +4,24 @@ import React, { FC, useMemo } from 'react'
 
 interface ISvgCanvas {
     projects: Project[]
-    svgCanvas: React.MutableRefObject<null>
-    zoomValue: number
+    svgCanvasRef: React.MutableRefObject<null>
+	viewBoxString: string
 }
 
 export const SvgCanvas: FC<ISvgCanvas> = ({
     projects,
-    svgCanvas,
-    zoomValue,
+    svgCanvasRef,
+	viewBoxString
 }) => {
     return (
         <svg
-			xmlns="http://www.w3.org/2000/svg"
+            xmlns="http://www.w3.org/2000/svg"
             className="svgCanvas"
-			viewBox="0 0 500 500"
             width="100%"
+			viewBox={viewBoxString}
             preserveAspectRatio="xMidYMid meet"
-            ref={svgCanvas}>
-            <g style={{ transform: `scale(${zoomValue})` }}>
+            ref={svgCanvasRef}>
+            <g>
                 {projects.map((p, i) => {
                     return (
                         <ProjectCircle
@@ -78,4 +78,3 @@ interface ILink {
 export const ProjectLink: FC<ILink> = ({ x1, y1, x2, y2 }) => {
     return <line x1={x1} x2={x2} y1={y1} y2={y2} stroke="black" />
 }
-
