@@ -3,6 +3,7 @@ import React, { FC, useRef } from 'react'
 import { SvgCanvas } from './SvgCanvas'
 import { Button, Paper } from '@mui/material'
 import { useSvgViewBox } from 'hooks/useSvgViewBox'
+import { SvgCircle } from '../SvgBlocks/SvgBlocks'
 
 interface IProps {
     projects: Project[]
@@ -16,7 +17,7 @@ export const SvgCanvasContainer: FC<IProps> = ({ projects }) => {
     return (
         <>
             <Paper
-				ref={wrapperRef}
+                ref={wrapperRef}
                 style={{
                     padding: '1em',
                     height: '100%',
@@ -28,7 +29,22 @@ export const SvgCanvasContainer: FC<IProps> = ({ projects }) => {
                         Сброс
                     </Button>
                 </div>
-                <SvgCanvas projects={projects} viewBoxString={viewBoxString} svgCanvasRef={svgCanvasRef} />
+				
+                <SvgCanvas
+                    viewBoxString={viewBoxString}
+                    svgCanvasRef={svgCanvasRef}>
+                    {projects.map((p, i) => {
+                        return (
+                            <SvgCircle
+                                size={'20'}
+                                x={`${20 + i * 100}`}
+                                y={`20`}
+                                text={p.name}
+                                key={p.id}
+                            />
+                        )
+                    })}
+                </SvgCanvas>
             </Paper>
         </>
     )
