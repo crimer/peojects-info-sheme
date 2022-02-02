@@ -1,75 +1,77 @@
-import { useEffect, useReducer, useRef } from 'react'
+import { useCallback, useEffect, useReducer, useRef } from 'react'
 
 interface State<T> {
     data?: T
     error?: Error
+	isLoading: boolean
 }
 
-// discriminated union type
 type Action<T> =
     | { type: 'loading' }
     | { type: 'fetched'; payload: T }
     | { type: 'error'; payload: Error }
 
-function useFetch<T = unknown>(url?: string, options?: RequestInit): State<T> {
-    // Used to prevent state update if the component is unmounted
-    const cancelRequest = useRef<boolean>(false)
+interface useFetchState<T> extends State<T> {
+	sendRequestAsync: () => Promise<void>
+	cancelRequest: () => void
+}
 
+function useFetch<T = unknown>(url: string, options?: RequestInit): useFetchState<T> {
+	const abortController = useRef<AbortController>(new AbortController())
+	
     const initialState: State<T> = {
         error: undefined,
         data: undefined,
+		isLoading: false
     }
 
-    // Keep state logic separated
-    const fetchReducer = (state: State<T>, action: Action<T>): State<T> => {
+	const [state, dispatch] = useReducer((state: State<T>, action: Action<T>): State<T> => {
         switch (action.type) {
             case 'loading':
-                return { ...initialState }
+                return { ...initialState, isLoading: true }
             case 'fetched':
-                return { ...initialState, data: action.payload }
+                return { ...initialState, data: action.payload, isLoading: false }
             case 'error':
-                return { ...initialState, error: action.payload }
+                return { ...initialState, error: action.payload, isLoading: false }
             default:
                 return state
         }
-    }
+    }, initialState)
 
-    const [state, dispatch] = useReducer(fetchReducer, initialState)
+	const fetchDataAsync = useCallback(async () => {
+		dispatch({ type: 'loading' })
+
+		try {
+			const response = await fetch(url, {...options, signal: abortController.current.signal})
+			if (!response.ok)
+				throw new Error(response.statusText)
+
+			const json = await response.json()
+			const data = json as T
+
+			dispatch({ type: 'fetched', payload: data })
+		} catch (error) {
+			dispatch({ type: 'error', payload: error as Error })
+		}
+	}, [dispatch])
+
+	const cancelRequest = useCallback(() => abortController.current.abort(), [])
+	const sendRequestAsync = useCallback(async () => await fetchDataAsync(), [fetchDataAsync])
 
     useEffect(() => {
-        // Do nothing if the url is not given
         if (!url) return
 
-        const fetchData = async () => {
-            dispatch({ type: 'loading' })
+        fetchDataAsync()
 
-
-            try {
-                const response = await fetch(url, options)
-                if (!response.ok) {
-                    throw new Error(response.statusText)
-                }
-
-                const data = (await response.json()) as T
-                if (cancelRequest.current) return
-
-                dispatch({ type: 'fetched', payload: data })
-            } catch (error) {
-                if (cancelRequest.current) return
-
-                dispatch({ type: 'error', payload: error as Error })
-            }
-        }
-
-        fetchData()
-
-        return () => {
-            cancelRequest.current = true
-        }
+        return () => cancelRequest()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [url])
+    }, [url, fetchDataAsync, cancelRequest])
 
-    return state
+    return {
+		...state, 
+		sendRequestAsync,
+		cancelRequest,
+	}
 }
 
 export { useFetch }

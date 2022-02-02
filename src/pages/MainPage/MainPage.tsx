@@ -3,6 +3,7 @@ import React, { FC, useState } from 'react'
 import { allProjects } from '../../models/project'
 import { Box } from '@mui/material'
 import { Sidebar } from 'shared/Sidebar/Sidebar'
+import { useFetch } from 'hooks/useFetch'
 
 /**
  * https://greensock.com/docs/v2/NPMUsage
@@ -23,6 +24,8 @@ export const MainPage: FC<IProps> = () => {
     const [projects, setProjects] = useState(allProjects)
     const [isSidebar, setIsSidebar] = React.useState<boolean>(false)
     const toggleSidebar = () => setIsSidebar(!isSidebar)
+
+	const {isLoading, data, error, cancelRequest, sendRequestAsync} = useFetch('/asd/asd', {}, )
 
     return (
         <>
