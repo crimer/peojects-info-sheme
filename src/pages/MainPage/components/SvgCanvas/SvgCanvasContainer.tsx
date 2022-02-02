@@ -2,8 +2,7 @@ import { Project } from '../../../../models/project'
 import React, { FC, useRef } from 'react'
 import { SvgCanvas } from './SvgCanvas'
 import { Button, Paper } from '@mui/material'
-import { useZoom } from 'hooks/useZoom'
-import { useDrag } from 'hooks/useDrag'
+import { useSvgViewBox } from 'hooks/useSvgViewBox'
 
 interface IProps {
     projects: Project[]
@@ -11,8 +10,7 @@ interface IProps {
 
 export const SvgCanvasContainer: FC<IProps> = ({ projects }) => {
     const svgCanvas = useRef(null)
-    const { resetZoom, zoomValue } = useZoom(svgCanvas)
-    useDrag(svgCanvas)
+    const { resetZoom, zoomValue } = useSvgViewBox(svgCanvas)
 
     return (
         <>

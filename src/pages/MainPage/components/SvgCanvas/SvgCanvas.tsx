@@ -17,6 +17,7 @@ export const SvgCanvas: FC<ISvgCanvas> = ({
         <svg
 			xmlns="http://www.w3.org/2000/svg"
             className="svgCanvas"
+			viewBox="0 0 500 500"
             width="100%"
             preserveAspectRatio="xMidYMid meet"
             ref={svgCanvas}>
@@ -77,3 +78,4 @@ interface ILink {
 export const ProjectLink: FC<ILink> = ({ x1, y1, x2, y2 }) => {
     return <line x1={x1} x2={x2} y1={y1} y2={y2} stroke="black" />
 }
+
