@@ -7,9 +7,10 @@ import { SvgCircle } from '../SvgBlocks/SvgBlocks'
 
 interface IProps {
     projects: Project[]
+	openSidebar: (project: Project | null) => void
 }
 
-export const SvgCanvasContainer: FC<IProps> = ({ projects }) => {
+export const SvgCanvasContainer: FC<IProps> = ({ projects, openSidebar }) => {
     const svgCanvasRef = useRef(null)
     const wrapperRef = useRef(null)
     const { reset, viewBoxString } = useSvgViewBox(svgCanvasRef)
@@ -36,6 +37,8 @@ export const SvgCanvasContainer: FC<IProps> = ({ projects }) => {
                     {projects.map((p, i) => {
                         return (
                             <SvgCircle
+								onClick={openSidebar}
+								project={p}
                                 size={'20'}
                                 x={`${20 + i * 100}`}
                                 y={`20`}

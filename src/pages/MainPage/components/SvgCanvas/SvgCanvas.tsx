@@ -1,4 +1,3 @@
-import { Project } from '../../../../models/project'
 import React, { FC } from 'react'
 
 interface ISvgCanvas {

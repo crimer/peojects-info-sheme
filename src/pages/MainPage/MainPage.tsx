@@ -1,9 +1,7 @@
 import { SvgCanvasContainer } from './components/SvgCanvas/SvgCanvasContainer'
-import React, { FC, useState } from 'react'
-import { allProjects } from '../../models/project'
+import React, { FC, useContext } from 'react'
 import { Box } from '@mui/material'
-import { Sidebar } from 'shared/Sidebar/Sidebar'
-import { useFetch } from 'hooks/useFetch'
+import { AppContext } from 'context/AppContext'
 
 /**
  * https://greensock.com/docs/v2/NPMUsage
@@ -21,21 +19,13 @@ import { useFetch } from 'hooks/useFetch'
 interface IProps {}
 
 export const MainPage: FC<IProps> = () => {
-    const [projects, setProjects] = useState(allProjects)
-    const [isSidebar, setIsSidebar] = React.useState<boolean>(false)
-    const toggleSidebar = () => setIsSidebar(!isSidebar)
-
-	const {isLoading, data, error, cancelRequest, sendRequestAsync} = useFetch('/asd/asd', {}, )
-
+	const { projects, toggleSidebar } = useContext(AppContext)
+	
     return (
         <>
             <Box style={{ height: '100%' }}>
-                <SvgCanvasContainer projects={projects} />
+                <SvgCanvasContainer openSidebar={toggleSidebar} projects={projects} />
             </Box>
-
-            {isSidebar && (
-                <Sidebar isOpen={isSidebar} toggleSidebar={toggleSidebar} />
-            )}
         </>
     )
 }

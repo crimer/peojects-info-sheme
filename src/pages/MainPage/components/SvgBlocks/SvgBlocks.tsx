@@ -1,14 +1,17 @@
 import { Position } from "models/position"
+import { Project } from "models/project"
 import React, { FC, useMemo } from "react"
 
-interface ICircle {
-    text: string
+interface IProps {
+	project: Project
+	onClick: (project: Project | null) => void
+	text: string
     x: string
     y: string
     size: string
 }
 
-export const SvgCircle: FC<ICircle> = (params) => {
+export const SvgCircle: FC<IProps> = (params) => {
     const textPos: Position = useMemo(() => {
         const pos: Position = {
             x: +params.x,
@@ -19,7 +22,7 @@ export const SvgCircle: FC<ICircle> = (params) => {
 
     return (
         <g
-            onClick={() => console.log('1')}
+            onClick={() => params.onClick(params.project)}
             stroke="green"
             fill="white"
             strokeWidth="5">

@@ -40,7 +40,7 @@ export const useSvgViewBox = <T extends HTMLElement | void = void>(svgCanvasRef:
 			width: svgPatentSizes.width,
 			height: svgPatentSizes.height,
 		})
-	}, [setSvgViewBox])
+	}, [setSvgViewBox, svgCanvasRef])
 	
 	const getPointFromEvent = useCallback((event: MouseEvent) => {
 		if(!svgCanvasRef.current) return
@@ -55,7 +55,7 @@ export const useSvgViewBox = <T extends HTMLElement | void = void>(svgCanvasRef:
 		const { x, y } = point.matrixTransform(invertedSVGMatrix)
 
 		return { x, y }
-	}, [])
+	}, [svgCanvasRef])
 
     const onPointerDown = useCallback((event: Event) => {
 		setIsPointerDown(true)
@@ -77,7 +77,7 @@ export const useSvgViewBox = <T extends HTMLElement | void = void>(svgCanvasRef:
 			minY: prev.minY - (domPoint.y  - pointerCoords.y)
 		}))
 		
-	},[isPointerDown, pointerCoords, getPointFromEvent])
+	},[isPointerDown, pointerCoords, getPointFromEvent, svgCanvasRef])
 
 	const onScroll = useCallback((event: Event) => {
 		if (!svgCanvasRef.current) return
@@ -103,7 +103,7 @@ export const useSvgViewBox = <T extends HTMLElement | void = void>(svgCanvasRef:
 				height: prev.height + zoomScale,
 			}))
 		}
-	},[setSvgViewBox, svgViewBox])
+	},[setSvgViewBox, svgCanvasRef])
 
 	useLayoutEffect(() => {
 		reset()
